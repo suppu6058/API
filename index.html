@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cloudinary Browser Upload</title>
+</head>
+<body>
+
+  <h2>Image Upload (Browser Only)</h2>
+
+  <input type="file" id="fileInput" />
+  <button onclick="uploadImage()">Upload</button>
+
+  <br><br>
+  <img id="preview" width="250" />
+
+  <script>
+    const CLOUD_NAME = "deaa3uyyp";      
+    const UPLOAD_PRESET = "supriyashreya";   
+
+    function uploadImage() {
+      const file = document.getElementById("fileInput").files[0];
+      if (!file) {
+        alert("Select image first");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
+
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Image URL:", data.secure_url);
+        document.getElementById("preview").src = data.secure_url;
+        alert("Upload success");
+      })
+      .catch(err => {
+        console.error("Upload error:", err);
+        alert("Upload failed");
+      });
+     
+    }
+  </script>
+
+</body>
+</html>
